@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <section id="messages" hx-swap-oob="true" hx-swap="innerHTML">
+        {% include "components/toast.html" %}
+    </section>
+    <div class="card shadow-lg p-5 rounded-lg bg-light" style="max-width: 600px;">
+        <h2 class="text-center fw-bold mb-4">Étape 2 : Habitudes Alimentaires</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold">Fréquence des repas</label>
+                {{ form.frequence_repas }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Taille des portions</label>
+                {{ form.portion }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Quantité d’eau consommée</label>
+                {{ form.eau_consommee }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Habitudes alimentaires</label>
+                {{ form.habitudes }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Méthodes de cuisson</label>
+                {{ form.methode_cuisson }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Suivant</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

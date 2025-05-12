@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/navbar.html" %}
+
+<div class="container my-5 mt-5">
+    <div class="mx-auto p-5 bg-light rounded card shadow p-4 mx-auto" style="max-width: 720px;">
+        <h2 class="text-center mb-4 fw-bold h3">Profil santé</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Genre -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Genre :</label>
+                <div class="row">
+                    <div class="col-6">
+                        <input type="radio" name="genre" id="genre-male" value="male" class="btn-check" autocomplete="off">
+                        <label class="btn btn-outline-success w-100" for="genre-male">
+                            👨 Homme
+                        </label>
+                    </div>
+                    <div class="col-6">
+                        <input type="radio" name="genre" id="genre-female" value="female" class="btn-check" autocomplete="off">
+                        <label class="btn btn-outline-success w-100" for="genre-female">
+                            👩 Femme
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tranche d’âge -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Tranche d’âge :</label>
+                <div class="row gy-2">
+                    {% for age_range in form.fields.age_range.choices %}
+                        <div class="col-6">
+                            <input type="radio" name="age_range" id="age_{{ forloop.counter }}" value="{{ age_range.0 }}" class="btn-check" autocomplete="off">
+                            <label class="btn btn-outline-success w-100" for="age_{{ forloop.counter }}">
+                                {{ age_range.1 }} ans
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Poids -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Poids (kg) :</label>
+                <input type="number" name="weight" class="form-control" placeholder="Votre poids">
+            </div>
+
+            <!-- Taille -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Taille (cm) :</label>
+                <input type="number" name="height" class="form-control" placeholder="Votre taille">
+            </div>
+
+            <!-- Type de diabète -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Type de diabète :</label>
+                <select name="diabetes_type" class="form-select">
+                    <option value="Type 1">Type 1</option>
+                    <option value="Type 2">Type 2</option>
+                    <option value="Gestational">Gestationnel</option>
+                    <option value="Pre-diabetes">Pré-diabète</option>
+                </select>
+            </div>
+
+            <!-- Bouton -->
+            <button type="submit" class="btn btn-primary w-100 mt-4">Suivant</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

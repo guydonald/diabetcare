@@ -1,0 +1,122 @@
+{% load static %}
+{% load i18n %}
+
+<section class="py-5" style="background-color: whitesmoke;" id="services">
+    <div class="container">
+        <h2 class="display-5 fw-bold text-center mb-5">{% trans "Nos Services" %}</h2>
+
+        <div class="row gy-5">
+            <!-- Service 1 -->
+            <div class="col-12">
+                <div class="card shadow border-0">
+                    <div class="row g-0 flex-column flex-lg-row-reverse align-items-center">
+                        <!-- Carousel -->
+                        <div class="col-lg-6 position-relative" 
+                             x-data="{
+                                 active: 0,
+                                 images: ['{% static 'img/femmesuivi.jpg' %}', '{% static 'img/sport.jpg' %}'],
+                                 init() {
+                                     setInterval(() => {
+                                         this.active = (this.active + 1) % this.images.length;
+                                     }, 5000);
+                                 }
+                             }">
+                            <template x-for="(image, index) in images" :key="index">
+                                <img 
+                                    :src="image" 
+                                    x-show="active === index"
+                                    x-transition:enter="transition-opacity duration-1500"
+                                    x-transition:leave="transition-opacity duration-1500"
+                                    class="img-fluid w-100 h-100 object-fit-cover position-absolute rounded rounded-circle top-0 start-0" 
+                                    style="z-index: 1;"
+                                    alt="Service image">
+                            </template>
+                            <div style="padding-top: 66%;"></div> <!-- Ratio 3:2 -->
+                        </div>
+
+                        <!-- Text -->
+                        <div class="col-lg-6 p-4">
+                            <h3 class="h4 fw-bold mb-3">Objectifs flexibles</h3>
+                            <p>Perte de poids, prise de masse ou équilibre alimentaire : à vous de choisir !</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service 2 -->
+            <div class="col-12">
+                <div class="card shadow border-0">
+                    <div class="row g-0 flex-column flex-lg-row align-items-center">
+                        <!-- Carousel -->
+                        <div class="col-lg-6 position-relative" 
+                             x-data="{
+                                 active: 0,
+                                 images: ['{% static 'img/suiviphone.jpg' %}', '{% static 'img/plan.jpg' %}'],
+                                 init() {
+                                     setInterval(() => {
+                                         this.active = (this.active + 1) % this.images.length;
+                                     }, 5000);
+                                 }
+                             }">
+                            <template x-for="(image, index) in images" :key="index">
+                                <img 
+                                    :src="image" 
+                                    x-show="active === index"
+                                    x-transition:enter="transition-opacity duration-1500"
+                                    x-transition:leave="transition-opacity duration-1500"
+                                    class="img-fluid w-100 h-100 object-fit-cover rounded rounded-circle position-absolute top-0 start-0" 
+                                    style="z-index: 1;"
+                                    alt="Service image">
+                            </template>
+                            <div style="padding-top: 66%;"></div>
+                        </div>
+
+                        <!-- Text -->
+                        <div class="col-lg-6 p-4">
+                            <h3 class="h4 fw-bold mb-3">Suivi personnalisé</h3>
+                            <p>Suivi de vos progrès avec conseils de nutrition et motivation régulière.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Service 3 -->
+            <div class="col-12">
+                <div class="card shadow border-0">
+                    <div class="row g-0 flex-column flex-lg-row align-items-center">
+                        <!-- Text -->
+                        <div class="col-lg-6 p-4">
+                            <h3 class="h4 fw-bold mb-3">Plans nutritionnels</h3>
+                            <p>Menus quotidiens adaptés à vos objectifs avec des plats africains savoureux.</p>
+                        </div>
+
+                        <!-- Carousel -->
+                        <div class="col-lg-6 position-relative" 
+                             x-data="{
+                                 active: 0,
+                                 images: ['{% static 'img/docfruit.jpg' %}', '{% static 'img/damefruits.jpg' %}'],
+                                 init() {
+                                     setInterval(() => {
+                                         this.active = (this.active + 1) % this.images.length;
+                                     }, 5000);
+                                 }
+                             }">
+                            <template x-for="(image, index) in images" :key="index">
+                                <img 
+                                    :src="image" 
+                                    x-show="active === index"
+                                    x-transition:enter="transition-opacity duration-1500"
+                                    x-transition:leave="transition-opacity duration-1500"
+                                    class="img-fluid w-100 h-100 object-fit-cover rounded rounded-circle position-absolute top-0 start-0" 
+                                    style="z-index: 1;"
+                                    alt="Service image">
+                            </template>
+                            <div style="padding-top: 66%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

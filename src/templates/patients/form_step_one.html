@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <section id="messages" hx-swap-oob="true" hx-swap="innerHTML">
+        {% include "components/toast.html" %}
+    </section>
+    <div class="card shadow-lg p-5 rounded-lg bg-light" style="max-width: 600px;">
+        <h2 class="text-center fw-bold mb-4">Étape 1 : Informations Générales</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Genre</label>
+                {{ form.genre }}
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tranche d'âge</label>
+                {{ form.age_range }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Poids</label>
+                {{ form.weight }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Taille</label>
+                {{ form.height }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Type de diabecte</label>
+                {{ form.diabetes_type }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Glycémie à jeun</label>
+                {{ form.fasting_glucose }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Glycémie après repa</label>
+                {{ form.postprandial_glucose }}
+            </div>
+
+            <div class="mb-3">
+                {{ form.hypertension }}
+                <label class="form-label fw-bold">Hypertension</label>
+            </div>
+
+            <div class="mb-3">
+                {{ form.dyslipidemia }}
+                <label class="form-label fw-bold">Dyslipidemia</label>
+            </div>
+
+            <div class="mb-3">
+                {{ form.kidney_disease }}
+                <label class="form-label fw-bold">Maladie du rein</label>
+            </div>
+
+            <div class="mb-3">
+                {{ form.obesity }}
+                <label class="form-label fw-bold">Obésité</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Suivant</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% load static %}
+{% load i18n %}
+
+
+<!-- Navbar Bootstrap -->
+<nav class="navbar navbar-expand-md navbar-light bg-success fixed-top" style="padding-left: 5%;">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand" href="{% url 'accueil' %}">
+      <img src="{% static 'img/logo.png' %}" alt="NutriAfrica Logo" style="height: 40px;width: 40px;" />
+    </a>
+
+    <!-- Bouton Burger (mobile) -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+      aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Contenu principal -->
+    <div class="collapse navbar-collapse d-none d-md-flex justify-content-center" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        {% if request.user.is_anonymous %}
+        <li class="nav-item">
+          <a class="nav-link" href="">{% trans "Home" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">{% trans "Nos service" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">{% trans "Contact" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_login' %}">{% trans "Login" %}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
+        </li>
+        {% else %}
+        {% if request.user.is_patient %}
+            <!-- Liens spécifiques aux patients -->
+            <li class="nav-item">
+              <a class="nav-link" href="">{% trans "Dashboard" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="">{% trans "Mon Profil" %}</a>
+            </li>
+          {% endif %}
+
+          {% if request.user.is_admin %}
+            <!-- Liens supplémentaires pour les admins -->
+            <li class="nav-item">
+              <a class="nav-link" href="">{% trans "Admin Dashboard" %}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'manage_patients' %}">{% trans "Gérer les utilisateurs" %}</a>
+            </li>
+          {% endif %}
+
+          <!-- Lien Logout qui ouvre le modal -->
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                {% trans "Logout" %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'list_articles' %}">{% trans "Articles" %}</a>
+          </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="#">{% trans "Programme" %}</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Langue & autres éléments -->
+    <div class="d-none d-md-flex">
+      <select id="custom-lang-select-mobile" class="form-select bg-success">
+        <option value="fr">&#x1F1EB;&#x1F1F7;</option>
+        <option value="en">&#x1F1EC;&#x1F1E7;</option>
+      </select>
+      <div class="dropdown">
+        <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="{% static 'img/logo.png' %}" class="rounded-circle" style="width: 35px;height: 35px;margin-left: 20px;" alt="profil">
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Another action</a></li>
+          <li><a class="dropdown-item" href="#">Something else here</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Navbar Offcanvas pour Mobile -->
+<div class="offcanvas offcanvas-end d-block d-md-none" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title">{% trans "Menu" %}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul class="navbar-nav">
+      {% if request.user.is_anonymous %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_login' %}">{% trans "Login" %}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_signup' %}">{% trans "Signup" %}</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Logout" %}</a>
+      </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link" href="#">{% trans "Programme" %}</a>
+      </li>
+    </ul>
+    <select id="custom-lang-select-mobile" class="form-select bg-success">
+      <option value="fr">&#x1F1EB;&#x1F1F7; Français</option>
+      <option value="en">&#x1F1EC;&#x1F1E7; English</option>
+    </select>
+  </div>
+</div>
+
+<!-- Modal de confirmation de déconnexion -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-4 rounded shadow-lg">
+          <div class="modal-header">
+              <h5 class="modal-title fw-bold">{% trans "Sign Out" %}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body text-center">
+              <h2 class="fw-bold">{% trans "Sign Out" %}</h2>
+              <p class="fs-5">{% trans "Are you sure you want to sign out?" %}</p>
+          </div>
+
+          <div class="modal-footer d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                  {% trans "Cancel" %}
+              </button>
+
+              {% url 'account_logout' as action_url %}
+              <form method="post" action="{{ action_url }}">
+                  {% csrf_token %}
+                  {{ redirect_field }}
+                  <button type="submit" class="btn btn-danger">
+                      {% trans "Sign Out" %}
+                  </button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>

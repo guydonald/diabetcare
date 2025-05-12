@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center fw-bold mb-4">Informations du Patient</h2>
+
+    <div class="card p-4 shadow-lg">
+        <h3 class="fw-bold">{{ patient.user.first_name }} {{ patient.user.last_name }}</h3>
+        <p><strong>Email :</strong> {{ patient.user.email }}</p>
+        <p><strong>Genre :</strong> {{ patient.genre }}</p>
+        <p><strong>Âge :</strong> {{ patient.age_range }}</p>
+        <p><strong>Type de diabète :</strong> {{ patient.diabetes_type }}</p><br>
+
+        {% if nutrition %}
+        <hr>
+        <h4 class="fw-bold">Habitudes Alimentaires</h4>
+        <p><strong>Fréquence des repas :</strong> {{ nutrition.frequence_repas }}</p>
+        <p><strong>Portion :</strong> {{ nutrition.portion }}</p>
+        <p><strong>Méthodes de cuisson :</strong> {{ nutrition.methode_cuisson }}</p>
+        <p><strong>Consommation d'eau :</strong> {{ nutrition.eau_consommee }}</p>
+        {% else %}
+        <p class="text-danger">Aucune information nutritionnelle disponible.</p>
+        {% endif %}
+
+        {% if activity %}
+        <hr>
+        <h4 class="fw-bold">Activité Physique</h4>
+        <p><strong>Types d'activités :</strong> {{ activity.activity_type }}</p>
+        <p><strong>Durée :</strong> {{ activity.physical_activity_duration }}</p>
+        <p><strong>Fréquence :</strong> {{ activity.physical_activity_frequency }}</p>
+        <p><strong>Intensité :</strong> {{ activity.intensity_level }}</p>
+        <p><strong>Heures de sommeil :</strong> {{ activity.sleep_hours }}</p>
+        <p><strong>Niveau de stress :</strong> {{ activity.stress_level }}</p>
+        {% else %}
+        <p class="text-danger">Aucune information sur l’activité physique disponible.</p>
+        {% endif %}
+
+        <!-- Formulaire d'envoi d'email -->
+        <hr>
+        <h4 class="fw-bold">Envoyer un message au patient</h4>
+        <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label fw-bold">Message</label>
+            <textarea class="form-control" name="message" rows="4" placeholder="Écrivez un message..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

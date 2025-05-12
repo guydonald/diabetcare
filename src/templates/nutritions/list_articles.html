@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+    {% include "components/navbar.html" %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let buttons = document.querySelectorAll("[data-bs-toggle='collapse']");
+        
+        buttons.forEach(button => {
+            button.addEventListener("click", function() {
+                let targetCollapse = document.querySelector(this.getAttribute("data-bs-target"));
+    
+                // Fermer toutes les autres sections ouvertes
+                document.querySelectorAll(".collapse.show").forEach(opened => {
+                    if (opened !== targetCollapse) {
+                        opened.classList.remove("show");
+                    }
+                });
+    
+                // Garde le formulaire actif après fermeture
+                let commentForm = targetCollapse.querySelector("form");
+                if (commentForm) {
+                    let formInputs = commentForm.querySelectorAll("input, textarea");
+                    formInputs.forEach(input => {
+                        input.value = input.value;  // Conservation des valeurs
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<div class="container" style="margin-top: 70px;">
+    <h2 class="text-center fw-bold mb-4">Articles Nutritionnels</h2>
+
+    {% if request.user.is_admin %}
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#articleModal">
+            + Ajouter un article
+        </button>
+    </div>
+    {% endif %}
+
+    <div class="row mt-4">
+        {% for article in articles %}
+        <div class="col-md-6 mb-2">
+            <div class="card shadow-lg p-3">
+                <h3 class="fw-bold">{{ article.titre }}</h3>
+                <p class="text-muted">Publié le {{ article.date_publication }} par {{ article.auteur }}</p>
+                <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseArticle{{ article.id }}" aria-expanded="false">
+                    Voir Plus
+                </button>
+
+                <!-- Détails de l’article et commentaires -->
+                <div class="collapse mt-1" id="collapseArticle{{ article.id }}" data-bs-parent="#articlesContainer">
+                    <div class="card card-body">
+                        <p>{{ article.contenu }}</p>
+                        <hr>
+                        <h6 class="fw-bold">Commentaires</h6>
+                        {% for commentaire in article.commentaire_set.all %}
+                            <div class="alert alert-secondary shadow-sm h-20">
+                                <p class="mb-1"><strong>{{ commentaire.utilisateur.email }}</strong> - {{ commentaire.date_commentaire }}</p>
+                                <small>{{ commentaire.contenu }}</small>
+                            </div>
+                        {% empty %}
+                            <p class="text-muted">Aucun commentaire pour cet article.</p>
+                        {% endfor %}
+
+                        <!-- Formulaire d’ajout de commentaire -->
+                        <hr>
+                        <h6 class="fw-bold">Laisser un commentaire</h6>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="article_id" value="{{ article.id }}">
+                            <input type="hidden" name="post_comment" value="true">
+                            {% with form_commentaires|get_item:article.id as form_comment %}
+                                {{ form_comment.as_p }}
+                            {% endwith %}
+
+                            <button type="submit" class="btn btn-primary">Publier</button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="collapse" data-bs-target="#collapseArticle{{ article.id }}" aria-expanded="false" aria-controls="collapseArticle{{ article.id }}">Fermer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">Aucun article disponible.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Modal pour ajouter un nouvel article (visible seulement pour les admins) -->
+{% if request.user.is_admin %}
+<div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="articleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content p-4 rounded shadow-lg">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Publier un nouvel article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="create_article" value="true">
+                    {{ form_article.as_p }}
+                    <button type="submit" class="btn btn-success w-100">Publier</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

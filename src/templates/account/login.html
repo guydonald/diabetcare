@@ -1,0 +1,65 @@
+{% extends "account/base_entrance.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
+{% block head_title %}
+    {% trans "Connexion" %}
+{% endblock head_title %}
+
+{% block content %}
+<div class="container min-vh-100 d-flex justify-content-center align-items-center bg-light" style="margin-top: 70px;margin-bottom: 30px;">
+    <div class="card shadow-lg p-4 rounded-4" style="max-width: 500px; width: 100%; background-color: rgba(255,255,255,0.95);">
+        <h1 class="text-2xl font-bold text-center">{% trans "Connexion à votre compte" %}</h1>
+
+        {% if not SOCIALACCOUNT_ONLY %}
+            <p class="text-sm text-center text-gray-600">
+                {% blocktranslate %}
+                    Vous n'avez pas encore de compte ?
+                    <a href="{{ signup_url }}" class="text-blue-600 hover:underline">Créer un compte</a>
+                {% endblocktranslate %}
+            </p>
+
+            {% url 'account_login' as login_url %}
+            <form method="post" action="{{ login_url }}" class="space-y-4 border rounded-4 p-4">
+                {% csrf_token %}
+                {{form|crispy}}
+
+                <button type="submit" class="btn btn-primary w-100 mt-2">
+                    {% trans "Se connecter" %}
+                </button>
+            </form>
+        {% endif %}
+
+        {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
+            <div class="divider">ou</div>
+            <div class="space-y-2">
+                {% if PASSKEY_LOGIN_ENABLED %}
+                    <button type="submit" form="mfa_login" id="passkey_login" class="btn btn-outline btn-primary">
+                        {% trans "Connexion avec une clé d’accès" %}
+                    </button>
+                {% endif %}
+                {% if LOGIN_BY_CODE_ENABLED %}
+                    <a href="{{ request_login_code_url }}" class="btn btn-outline btn-primary">
+                        {% trans "Recevoir un code de connexion" %}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if SOCIALACCOUNT_ENABLED %}
+            <hr class="my-4">
+            <div class="divider text-center">ou via</div>
+            {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_body %}
+    {{ block.super }}
+    {% if PASSKEY_LOGIN_ENABLED %}
+        {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+    {% endif %}
+{% endblock extra_body %}

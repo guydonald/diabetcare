@@ -1,0 +1,77 @@
+{% load static %}
+{% load i18n %}
+
+<section
+  x-data="carousel()"
+  x-init="start()"
+  class="position-relative d-flex align-items-center justify-content-center min-vh-100 overflow-hidden"
+>
+  <!-- Image de fond -->
+  <div class="position-absolute top-0 start-0 w-100 h-100">
+    <img 
+      :src="images[active]"
+      alt="Bannière nutrition"
+      x-ref="currentImage"
+      class="w-100 h-100 object-fit-cover position-absolute top-0 start-0 transition-fade"
+      :class="{ 'fade-in': fadeIn, 'fade-out': !fadeIn }"
+    >
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-black opacity-50"></div>
+  </div>
+
+  <!-- Texte centré -->
+  <div class="position-relative text-center container px-4 z-3" :class="colors[active]">
+    <h1 class="display-4 fw-bold mb-4" x-text="titles[active]"></h1>
+    <p class="lead mb-4" x-text="texts[active]"></p>
+    <a href="{% url 'patients' %}" class="btn btn-primary px-4 py-2">Start now</a>
+  </div>
+</section>
+
+<script>
+  function carousel() {
+    return {
+      active: 0,
+      fadeIn: true,
+      images: [
+        "{% static 'img/newhome.jpg' %}",
+        "{% static 'img/homeplan.jpg' %}",
+        "{% static 'img/fruits.jpg' %}"
+      ],
+      titles: [
+        'Nourish and Heal: Your Path to Better Health.',
+        'Enhance Health Through Nutrition',
+        'Fresh, Healthy, Vibrant Living.'
+      ],
+      texts: [
+        'Healing Through Nutrition, Your Health, Wealth.',
+        'Using Food As A Tool For Better Health.',
+        'Fresh, Healthy, Vibrant Living.'
+      ],
+      colors: ['text-white', 'text-dark', 'text-success'],
+      start() {
+        setInterval(() => {
+          this.fadeIn = false;
+          setTimeout(() => {
+            this.active = (this.active + 1) % this.images.length;
+            this.fadeIn = true;
+          }, 1500); // moment du switch
+        }, 10000);
+      }
+    }
+  }
+</script>
+<style>
+    .transition-fade {
+      transition: opacity 1s ease-in-out;
+    }
+  
+    .fade-in {
+      opacity: 1;
+      z-index: 1;
+    }
+  
+    .fade-out {
+      opacity: 0;
+      z-index: 0;
+    }
+  </style>
+  

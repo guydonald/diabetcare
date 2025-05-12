@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <section id="messages" hx-swap-oob="true" hx-swap="innerHTML">
+        {% include "components/toast.html" %}
+    </section>
+    <div class="card shadow-lg p-5 rounded-lg bg-light" style="max-width: 800px;">
+        <h2 class="text-center fw-bold mb-4">Résumé de votre santé</h2>
+
+        <!-- Informations générales -->
+        <div class="card mb-3 p-4 shadow-sm">
+            <h3 class="fw-bold">Informations Générales</h3>
+            <p>Genre : {{ patient.genre }}</p>
+            <p>Âge : {{ patient.age_range }}</p>
+            <p>Poids : {{ patient.weight }} kg</p>
+            <p>Taille : {{ patient.height }} cm</p>
+            <p>IMC : {{ patient.imc }}</p>
+            <p>Type de diabète : {{ patient.diabetes_type }}</p>
+        </div>
+
+        <!-- Habitudes alimentaires -->
+        {% if nutrition %}
+        <div class="card mb-3 p-4 shadow-sm">
+            <h3 class="fw-bold">Habitudes Alimentaires</h3>
+            <p>Fréquence des repas : {{ nutrition.frequence_repas }}</p>
+            <p>Portion moyenne : {{ nutrition.portion }}</p>
+            <p>Méthodes de cuisson :</p>
+            <ul>
+                {% for habit in nutrition.methode_cuisson %}
+                    <li>{{ habit }}</li>
+                {% endfor %}
+            </ul>
+            <p>Consommation d'eau : {{ nutrition.eau_consommee }}</p>
+            <p>Habitudes alimentaires :</p>
+            <ul>
+                {% for habit in nutrition.habitudes %}
+                    <li>{{ habit }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Activité physique -->
+        {% if activity %}
+        <div class="card mb-3 p-4 shadow-sm">
+            <h3 class="fw-bold">Activité Physique</h3>
+            <p>Types d’activités pratiquées :</p>
+            <ul>
+                {% for act in activity.activity_type %}
+                    <li>{{ act }}</li>
+                {% endfor %}
+            </ul>
+            <p>Durée : {{ activity.physical_activity_duration }}</p>
+            <p>Fréquence : {{ activity.physical_activity_frequency }}</p>
+            <p>Intensité : {{ activity.intensity_level }}</p>
+            <p>Heures de sommeil : {{ activity.sleep_hours }}</p>
+            <p>Niveau de stress : {{ activity.stress_level }}</p>
+        </div>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="" class="btn btn-primary">Modifier votre profil</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "components/navbar.html" %}
+
+<div class="container py-5">
+    <div class="card shadow p-4 mx-auto" style="max-width: 720px;">
+        <h2 class="text-center mb-4">Vos habitudes alimentaires</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Fréquence des repas -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Combien de fois mangez-vous par jour ?</label>
+                <div class="row gy-2">
+                    {% for freq in form.meal_frequency.field.choices %}
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="meal_frequency" id="meal_{{ forloop.counter }}" value="{{ freq.0 }}">
+                            <label class="btn btn-outline-success w-100" for="meal_{{ forloop.counter }}">
+                                {{ freq.1 }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Taille des portions -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Taille de portion :</label>
+                <div class="row gy-2">
+                    {% for portion in form.portion_size.field.choices %}
+                        <div class="col-4">
+                            <input type="radio" class="btn-check" name="portion_size" id="portion_{{ forloop.counter }}" value="{{ portion.0 }}">
+                            <label class="btn btn-outline-success w-100" for="portion_{{ forloop.counter }}">
+                                {{ portion.1 }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Méthodes de cuisson -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Méthodes de cuisson préférées :</label>
+                <div class="row gy-2">
+                    {% for method in form.cooking_methods.field.choices %}
+                        <div class="col-6">
+                            <input type="checkbox" class="btn-check" name="cooking_methods" id="cook_{{ forloop.counter }}" value="{{ method.0 }}">
+                            <label class="btn btn-outline-success w-100" for="cook_{{ forloop.counter }}">
+                                {{ method.1 }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Consommation d'eau -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Combien d'eau buvez-vous par jour ?</label>
+                <div class="row gy-2">
+                    {% for water in form.water_intake.field.choices %}
+                        <div class="col-6">
+                            <input type="radio" class="btn-check" name="water_intake" id="water_{{ forloop.counter }}" value="{{ water.0 }}">
+                            <label class="btn btn-outline-success w-100" for="water_{{ forloop.counter }}">
+                                {{ water.1 }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Produits alimentaires favoris -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Quels types d’aliments consommez-vous régulièrement ?</label>
+                <div class="row gy-2">
+                    {% for product in form.favorite_products.field.choices %}
+                        <div class="col-6">
+                            <input type="checkbox" class="btn-check" name="favorite_products" id="product_{{ forloop.counter }}" value="{{ product.0 }}">
+                            <label class="btn btn-outline-success w-100" for="product_{{ forloop.counter }}">
+                                {{ product.1 }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Régime alimentaire -->
+            <div class="mb-4">
+                <label class="form-label fw-bold">Suivez-vous un régime spécifique ?</label>
+                <div class="row gy-2">
+                    {% for diet in form.diet_preferences.field.choices %}
+                        <div class="col-6">
+                            <input type="checkbox" class="btn-check" name="diet_preferences" id="diet_{{ forloop.counter }}" value="{{ diet.0 }}">
+                            <label class="btn btn-outline-success w-100" for="diet_{{ forloop.counter }}">
+                                {{ diet.1 }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Suivant</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

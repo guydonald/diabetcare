@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center fw-bold">{{ article.titre }}</h2>
+    <p class="text-muted text-center">Publié le {{ article.date_publication }} par {{ article.auteur }}</p>
+
+    <div class="card p-4 shadow-lg">
+        <p>{{ article.contenu }}</p>
+    </div>
+
+    <hr>
+    <h4 class="fw-bold">Commentaires</h4>
+    <div class="mb-4">
+        {% for commentaire in commentaires %}
+            <div class="alert alert-secondary shadow-sm">
+                <p class="mb-1"><strong>{{ commentaire.utilisateur.email }}</strong> - {{ commentaire.date_commentaire }}</p>
+                <p>{{ commentaire.contenu }}</p>
+            </div>
+        {% empty %}
+            <p class="text-muted">Aucun commentaire pour cet article.</p>
+        {% endfor %}
+    </div>
+
+    <hr>
+    <h4 class="fw-bold">Laisser un commentaire</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Publier</button>
+    </form>
+</div>
+{% endblock %}

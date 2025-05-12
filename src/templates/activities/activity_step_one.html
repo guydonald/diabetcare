@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <section id="messages" hx-swap-oob="true" hx-swap="innerHTML">
+        {% include "components/toast.html" %}
+    </section>
+    <div class="card shadow-lg p-5 rounded-lg bg-light" style="max-width: 600px;">
+        <h2 class="text-center fw-bold mb-4">Étape 3 : Activité Physique</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label fw-bold">Types d'activités pratiquées</label>
+                {{ form.activity_type }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Durée de l'activité physique</label>
+                {{ form.physical_activity_duration }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Fréquence de l'activité physique</label>
+                {{ form.physical_activity_frequency }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Niveau d’intensité</label>
+                {{ form.intensity_level }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Durée du sommeil</label>
+                {{ form.sleep_hours }}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Niveau de stress</label>
+                {{ form.stress_level }}
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 mt-3">Suivant</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

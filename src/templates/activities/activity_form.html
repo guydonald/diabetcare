@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "components/navbar.html" %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const noSportCheckbox = document.querySelector('input[value="none"][name="activity_type"]');
+        const frequencyField = document.querySelectorAll('input[name="physical_activity_frequency"]');
+        const intensityField = document.querySelectorAll('input[name="intensity_level"]');
+
+        function applyDefaultSelections() {
+            if (noSportCheckbox && noSportCheckbox.checked) {
+                frequencyField.forEach(option => {
+                    if (option.value === "none") {
+                        option.checked = true;
+                        option.nextElementSibling.classList.add('active');
+                    }
+                });
+
+                intensityField.forEach(option => {
+                    if (option.value === "none") {
+                        option.checked = true;
+                        option.nextElementSibling.classList.add('active');
+                    }
+                });
+            }
+        }
+
+        if (noSportCheckbox) {
+            noSportCheckbox.addEventListener("change", applyDefaultSelections);
+        }
+        applyDefaultSelections();
+    });
+</script>
+
+<div class="container mt-5">
+    <div class="card shadow p-4 mx-auto" style="max-width: 720px;">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Suivi de votre activité physique</h2>
+            <form method="POST">
+                {% csrf_token %}
+
+                {% for field in form.visible_fields %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            {{ field.label }}
+                        </label>
+
+                        <div class="row g-2">
+                            {% for choice in field.field.choices %}
+                                <div class="col-6 col-md-4 col-lg-4">
+                                    <input type="{{ field.field.widget.input_type }}" 
+                                           class="btn-check" 
+                                           name="{{ field.name }}" 
+                                           value="{{ choice.0 }}" 
+                                           id="{{ field.name }}_{{ forloop.counter }}" 
+                                           autocomplete="off">
+                                    <label class="btn btn-outline-success w-100" 
+                                           for="{{ field.name }}_{{ forloop.counter }}">
+                                        {{ choice.1 }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <button type="submit" class="btn btn-primary w-100 mt-4">Suivant</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

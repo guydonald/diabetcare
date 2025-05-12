@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('.popover-trigger'));
+    popoverTriggerList.forEach(function (popoverTriggerEl) {
+        new bootstrap.Popover(popoverTriggerEl, {
+            trigger: "hover",
+            delay: { "show": 500, "hide": 100 } // Optionnel : délai
+        });
+    });
+});
+  </script>
+{% include "components/navbar.html" %}
+<div class="container" style="margin-top: 70px;">
+    <h2 class="text-center fw-bold mb-4">Gestion des Patients</h2>
+
+    {% include "components/toast.html" %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Type de diabète</th>
+                    <th>IMC</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in patients_details %}
+                <tr>
+                    <td>{{ data.patient.user.first_name }} {{ data.patient.user.last_name }}</td>
+                    <td>{{ data.patient.user.email }}</td>
+                    <td>{{ data.patient.diabetes_type }}</td>
+                    <td>{{ data.patient.imc }}</td>
+                    <td>
+                        <button type="button" class="btn btn-info popover-trigger" data-bs-toggle="modal" data-bs-target="#patientModal{{ data.patient.id }}" data-bs-placement="top" data-bs-content="Modify patient" data-bs-trigger="hover">
+                            détails
+                        </button>
+                        <button type="button" class="btn btn-info popover-trigger" data-bs-toggle="modal" data-bs-target="#patientModalmodify{{ data.patient.id }}" data-bs-placement="top" data-bs-content="Modify patient" data-bs-trigger="hover">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                            </svg>
+                        </button>
+                        <!-- Bouton Modifier Nutrition -->
+                        <button type="button" class="btn btn-success popover-trigger" data-bs-toggle="modal" data-bs-target="#patientModalNutrition{{ data.patient.id }}" data-bs-placement="top" data-bs-content="Modify patient" data-bs-trigger="hover">
+                            nutrition
+                        </button>
+                        <!-- Bouton Modifier Activité -->
+                        <button type="button" class="btn btn-warning popover-trigger" data-bs-toggle="modal" data-bs-target="#patientModalActivity{{ data.patient.id }}" data-bs-placement="top" data-bs-content="Modify patient" data-bs-trigger="hover">
+                            activité
+                        </button>
+
+                        <!-- Modal de détails du patient -->
+                        <div class="modal fade" id="patientModal{{ data.patient.id }}" tabindex="-1" aria-labelledby="patientModalLabel{{ patient.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content p-4 rounded shadow-lg">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title fw-bold">Informations du Patient</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p><strong>Nom :</strong> {{ data.patient.user.first_name }} {{ data.patient.user.last_name }}</p>
+                                        <p><strong>Email :</strong> {{ data.patient.user.email }}</p>
+                                        <p><strong>Genre :</strong> {{ data.patient.genre }}</p>
+                                        <p><strong>Âge :</strong> {{ data.patient.age_range }}</p>
+                                        <p><strong>Type de diabète :</strong> {{ data.patient.diabetes_type }}</p>
+                                        <br>
+                                        
+                                        {% if data.nutrition %}
+                                            <hr>
+                                            <h4 class="fw-bold">Habitudes Alimentaires</h4>
+                                            <p><strong>Fréquence des repas :</strong> {{ data.nutrition.frequence_repas }}</p>
+                                            <p><strong>Portion :</strong> {{ data.nutrition.portion }}</p>
+                                            <p><strong>Méthodes de cuisson :</strong></p>
+                                            <ul>
+                                                {% for habit in data.nutrition.methode_cuisson %}
+                                                    <li>{{ habit }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            <p><strong>Habitudes alimentaires :</strong></p>
+                                            <ul>
+                                                {% for habit in data.nutrition.habitudes %}
+                                                    <li>{{ habit }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            <p><strong>Consommation d'eau :</strong> {{ data.nutrition.eau_consommee }}</p>
+                                        {% else %}
+                                            <p class="text-danger">Aucune information nutritionnelle disponible.</p>
+                                        {% endif %}
+
+                                        {% if data.activity %}
+                                            <br>
+                                            <hr>
+                                            <h4 class="fw-bold">Activité Physique</h4>
+                                            <p><strong>Types d'activités :</strong></p>
+                                            <ul>
+                                                {% for act in data.activity.activity_type %}
+                                                    <li>{{ act }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                            <p><strong>Durée :</strong> {{ data.activity.physical_activity_duration }}</p>
+                                            <p><strong>Fréquence :</strong> {{ data.activity.physical_activity_frequency }}</p>
+                                            <p><strong>Intensité :</strong> {{ data.activity.intensity_level }}</p>
+                                            <p><strong>Heures de sommeil :</strong> {{ data.activity.sleep_hours }}</p>
+                                            <p><strong>Niveau de stress :</strong> {{ data.activity.stress_level }}</p>
+                                        {% else %}
+                                            <p class="text-danger">Aucune information sur l’activité physique disponible.</p>
+                                        {% endif %}
+
+                                        <!-- Formulaire d'envoi d'email -->
+                                        <hr>
+                                        <h4 class="fw-bold">Envoyer un message au patient</h4>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="patient_id" value="{{ data.patient.id }}">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Message</label>
+                                                <textarea class="form-control" name="message" rows="4" placeholder="Écrivez un message..."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Modal de modification du patient -->
+                        <div class="modal fade" id="patientModalmodify{{ data.patient.id }}" tabindex="-1" aria-labelledby="patientModalLabelmodify{{ data.patient.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content p-4 rounded shadow-lg">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold">Modifier les informations du patient</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="patient_id" value="{{ data.patient.id }}">
+                                            <input type="hidden" name="modify_patient" value="true">
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Genre</label>
+                                                <select name="genre" class="form-select">
+                                                    <option value="male" {% if data.patient.genre == "male" %}selected{% endif %}>Homme</option>
+                                                    <option value="female" {% if data.patient.genre == "female" %}selected{% endif %}>Femme</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Tranche d'âge</label>
+                                                <select name="age_range" class="form-select">
+                                                    <option value="05-15" {% if data.patient.age_range == "05-15" %}selected{% endif %}>05-15 ans</option>
+                                                    <option value="16-25" {% if data.patient.age_range == "16-25" %}selected{% endif %}>16-25 ans</option>
+                                                    <option value="26-35" {% if data.patient.age_range == "26-35" %}selected{% endif %}>26-35 ans</option>
+                                                    <option value="36-45" {% if data.patient.age_range == "36-45" %}selected{% endif %}>36-45 ans</option>
+                                                    <option value="46+" {% if data.patient.age_range == "46+" %}selected{% endif %}>46 ans et plus</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Type de diabète</label>
+                                                <select name="diabetes_type" class="form-select">
+                                                    <option value="Type 1" {% if data.patient.diabetes_type == "Type 1" %}selected{% endif %}>Type 1</option>
+                                                    <option value="Type 2" {% if data.patient.diabetes_type == "Type 2" %}selected{% endif %}>Type 2</option>
+                                                    <option value="Gestational" {% if data.patient.diabetes_type == "Gestational" %}selected{% endif %}>Gestationnel</option>
+                                                    <option value="Pre-diabetes" {% if data.patient.diabetes_type == "Pre-diabetes" %}selected{% endif %}>Pré-diabète</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Poids (kg)</label>
+                                                <input type="number" name="weight" class="form-control" value="{{ data.patient.weight }}">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Taille (cm)</label>
+                                                <input type="number" name="height" class="form-control" value="{{ data.patient.height }}">
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success w-100">Enregistrer les modifications</button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal pour modifier les habitudes alimentaires -->
+                        <div class="modal fade" id="patientModalNutrition{{ data.patient.id }}" tabindex="-1" aria-labelledby="patientModalLabelNutrition{{ data.patient.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content p-4 rounded shadow-lg">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold">Modifier les habitudes alimentaires</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="patient_id" value="{{ data.patient.id }}">
+                                            <input type="hidden" name="modify_nutrition" value="true">
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Fréquence des repas</label>
+                                                <select name="frequence_repas" class="form-select">
+                                                    <option value="1x" {% if data.nutrition.frequence_repas == "1x" %}selected{% endif %}>Une fois par jour</option>
+                                                    <option value="2x" {% if data.nutrition.frequence_repas == "2x" %}selected{% endif %}>Deux fois par jour</option>
+                                                    <option value="3x" {% if data.nutrition.frequence_repas == "3x" %}selected{% endif %}>Trois fois par jour</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Taille des portions</label>
+                                                <select name="portion" class="form-select">
+                                                    <option value="petite" {% if data.nutrition.portion == "petite" %}selected{% endif %}>Petite</option>
+                                                    <option value="modérée" {% if data.nutrition.portion == "modérée" %}selected{% endif %}>Modérée</option>
+                                                    <option value="grande" {% if data.nutrition.portion == "grande" %}selected{% endif %}>Grande</option>
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-success w-100">Enregistrer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal pour modifier l’activité physique -->
+                        <div class="modal fade" id="patientModalActivity{{ data.patient.id }}" tabindex="-1" aria-labelledby="patientModalLabelActivity{{ data.patient.id }}" aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content p-4 rounded shadow-lg">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold">Modifier l’activité physique</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="patient_id" value="{{ data.patient.id }}">
+                                            <input type="hidden" name="modify_activity" value="true">
+
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Fréquence de l’activité</label>
+                                                <select name="physical_activity_frequency" class="form-select">
+                                                    <option value="none" {% if data.activity.physical_activity_frequency == "none" %}selected{% endif %}>Jamais</option>
+                                                    <option value="once" {% if data.activity.physical_activity_frequency == "once" %}selected{% endif %}>Une fois par semaine</option>
+                                                    <option value="twice" {% if data.activity.physical_activity_frequency == "twice" %}selected{% endif %}>Deux fois par semaine</option>
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-warning w-100">Enregistrer</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
