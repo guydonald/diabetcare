@@ -1,4 +1,4 @@
 # Ignorer les fichiers de configuration
-diabectcare/.env
+src/diabetcare/.env
 # Ignorer la base de données SQLite
 db.sqlite3
